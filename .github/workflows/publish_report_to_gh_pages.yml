@@ -51,18 +51,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Get Date
+        shell: bash
+        run: today=`date +%F`
       - name: Download coverage report
         uses: actions/download-artifact@v3
         with:
           name: coverage-report
+          path: public/$today
       - name: Check for report
         shell: bash
-        run: ls
-      - name: Move report
-        shell: bash
         run: |
-          today=`date +%F`
-          mv coverage public/$today
+          ls
+          ls public
       - uses: actions/setup-node@v3
         with:
           node-version: '18.x'
