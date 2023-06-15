@@ -22,8 +22,28 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: cek-roadmunk-tempo/express-rest-api-coverage
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      - run: npm ci
+      - run: npm test
+      - name: store coverage report artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: |
+            coverage
+            !coverage/tmp
+
   # Single deploy job since we're just deploying
   deploy:
+    needs: run_tests
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -31,6 +51,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Download coverage report
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-report
+      - name: Move report
+        shell: bash
+        run: |
+          today=`date +%F`
+          mv coverage public/$today
       - uses: actions/setup-node@v3
         with:
           node-version: '18.x'
@@ -41,7 +70,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          # Upload entire repository
           path: './public'
       - name: Deploy to GitHub Pages
         id: deployment
