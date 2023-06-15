@@ -53,12 +53,12 @@ jobs:
         uses: actions/checkout@v3
       - name: Get Date
         shell: bash
-        run: today=`date +%F`
+        run: today=`date +%F` >> "$GITHUB_ENV"
       - name: Download coverage report
         uses: actions/download-artifact@v3
         with:
           name: coverage-report
-          path: public/${{ today }}
+          path: public/${{ env.today }}
       - name: Check for report
         shell: bash
         run: |
