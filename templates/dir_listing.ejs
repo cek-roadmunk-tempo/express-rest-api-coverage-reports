@@ -15,7 +15,13 @@
 </head>
 <body>
 	<div><ul>
-		<li><a href="2023-06-14/lcov-report/index.html">2023-06-14</a></li>
+<%_ folders.forEach(function(folder){ -%>
+	<%_ if (hasReport) { -%>
+		<li><a href="<%= folder.name %>/lcov-report/index.html"><%= folder.name %></a></li>
+	<%_ } else { -%>
+		<li><a href="<%= folder.name %>/index.html"><%= folder.name %></a></li>
+	<%_ } -%>
+<%_ }); -%>
 	</ul></div>
 </body>
 </html>
