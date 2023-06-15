@@ -58,7 +58,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: coverage-report
-          path: public/$today
+          path: public/${{ today }}
       - name: Check for report
         shell: bash
         run: |
